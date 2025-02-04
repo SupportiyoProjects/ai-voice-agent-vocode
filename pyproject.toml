@@ -1,6 +1,8 @@
 [tool.poetry]
 name = "telephony-app"
 version = "0.1.0"
+packages = [{include = "your_package_name"}]
+package-mode = false
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
