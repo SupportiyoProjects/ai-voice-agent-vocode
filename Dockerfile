@@ -1,6 +1,6 @@
 FROM python:3.9-bullseye
 
-# get portaudio and ffmpeg
+# get portaudio and
 RUN apt-get update \
         && apt-get install libportaudio2 libportaudiocpp0 portaudio19-dev libasound-dev libsndfile1-dev -y
 RUN apt-get -y update
