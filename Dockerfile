@@ -11,8 +11,10 @@ WORKDIR /code
 COPY ./pyproject.toml /code/pyproject.toml
 COPY ./poetry.lock /code/poetry.lock
 RUN pip install --no-cache-dir --upgrade poetry
-RUN pip install httpx
+RUN pip install httpx python-dotenv  # Added python-dotenv here
 COPY README.md /code/README.md
+
+
 RUN poetry config virtualenvs.create false
 RUN poetry install --only main --no-root --no-interaction --no-ansi
 COPY main.py /code/main.py

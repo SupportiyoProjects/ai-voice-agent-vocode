@@ -17,6 +17,7 @@ from vocode.streaming.telephony.server.base import (
     TelephonyServer,
 )
 from vocode.streaming.models.synthesizer import StreamElementsSynthesizerConfig # ,ElevenLabsSynthesizerConfig
+from vocode.streaming.models.transcriber import DeepgramTranscriberConfig
 
 # Imports our custom actions
 from speller_agent import SpellerAgentFactory
@@ -27,10 +28,24 @@ from events_manager import EventsManager
 # if running from python, this will load the local .env
 # docker-compose will load the .env file by itself
 from dotenv import load_dotenv
+from fastapi import FastAPI, Request
+from twilio.twiml.voice_response import VoiceResponse
 
+
+
+# app = FastAPI(docs_url=None)
 load_dotenv()
+app = FastAPI()
+@app.post("/inbound_call")
+   async def inbound_call(request: Request):
+       # Log the incoming request for debugging
+       body = await request.json()
+       print("Received request:", body)
 
-app = FastAPI(docs_url=None)
+       response = VoiceResponse()
+       response.say("Connecting you to the agent.")
+       # Add your logic to connect to the agent here
+       return str(response)
 
 # Initialize logging
 logging.basicConfig()
@@ -99,7 +114,7 @@ SYNTH_CONFIG = StreamElementsSynthesizerConfig.from_telephone_output_device()
 
 
 # This is where we spin up the Telephony server to get the calls running
-telephony_server = TelephonyServer(
+# telephony_server = TelephonyServer(
     base_url=BASE_URL,
     config_manager=config_manager,
     inbound_call_configs=[
@@ -114,5 +129,25 @@ telephony_server = TelephonyServer(
     agent_factory=SpellerAgentFactory(),
     logger=logger,
 )
+transcriber_config = DeepgramTranscriberConfig(
+    language="en",
+    model="nova",
+)
 
+telephony_server = TelephonyServer(
+    base_url=BASE_URL,
+    config_manager=config_manager,
+    inbound_call_configs=[
+        TwilioInboundCallConfig(
+            url="/inbound_call",
+            agent_config=AGENT_CONFIG,
+            twilio_config=TWILIO_CONFIG,
+            transcriber_config=transcriber_config,  # Add this
+            synthesizer_config=SYNTH_CONFIG,
+        )
+    ],
+    events_manager=EventsManager(),
+    agent_factory=SpellerAgentFactory(),
+    logger=logger,
+)
 app.include_router(telephony_server.get_router())
