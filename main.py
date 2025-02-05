@@ -28,8 +28,6 @@ from events_manager import EventsManager
 # if running from python, this will load the local .env
 # docker-compose will load the .env file by itself
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
-from twilio.twiml.voice_response import VoiceResponse
 
 
 
