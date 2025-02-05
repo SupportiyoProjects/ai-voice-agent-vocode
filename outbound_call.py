@@ -24,7 +24,7 @@ async def main():
 
     # Use the same agent config as in main.py
     agent_config = ChatGPTAgentConfig(
-        initial_message=BaseMessage(text="Hello, who am I talking to?"),
+        initial_message=BaseMessage(text="Hello, who am I talking to i am Ali from Pakistan?"),
         prompt_preamble=get_assistant_instructions(),
         generate_responses=True,
     )

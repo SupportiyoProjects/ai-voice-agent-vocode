@@ -29,7 +29,6 @@ from events_manager import EventsManager
 # docker-compose will load the .env file by itself
 from dotenv import load_dotenv
 
-from fastapi import FastAPI, Request
 from twilio.twiml.voice_response import VoiceResponse
 
 # app = FastAPI(docs_url=None)
